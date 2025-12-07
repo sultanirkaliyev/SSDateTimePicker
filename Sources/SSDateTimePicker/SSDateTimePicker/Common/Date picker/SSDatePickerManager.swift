@@ -45,7 +45,7 @@ final class SSDatePickerManager: ObservableObject, DatePickerConfigurationDirect
     /// The last known selected date for canceling selection.
     private var lastSelectedDate: Date?
 
-    var cancelDateRangeSelectionCallback: () -> () = {_ in}
+    var cancelDateRangeSelectionCallback: () -> ()
     var dateRangeSelectionCallback: (DateRange) -> () = {_ in}
     var multiDateSelectionCallback: ([Date]) -> () = {_ in}
     var dateSelectionCallback: (Date) -> () = {_ in}
