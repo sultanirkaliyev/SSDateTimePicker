@@ -45,7 +45,7 @@ final class SSDatePickerManager: ObservableObject, DatePickerConfigurationDirect
     /// The last known selected date for canceling selection.
     private var lastSelectedDate: Date?
 
-    var cancelDateRangeSelectionCallback: () -> ()
+    var cancelDateRangeSelectionCallback: (() -> ())?
     var dateRangeSelectionCallback: (DateRange) -> () = {_ in}
     var multiDateSelectionCallback: ([Date]) -> () = {_ in}
     var dateSelectionCallback: (Date) -> () = {_ in}
@@ -210,7 +210,7 @@ final class SSDatePickerManager: ObservableObject, DatePickerConfigurationDirect
         case .month, .year:
             self.currentMonth = lastCurrentMonth
         }
-        cancelDateRangeSelectionCallback()
+        cancelDateRangeSelectionCallback?()
     }
     
     /// Confirms the selection and notifies the delegate.
@@ -229,13 +229,22 @@ final class SSDatePickerManager: ObservableObject, DatePickerConfigurationDirect
     /// Notifies the delegate about the selected dates based on the configuration.
     func handleCallback() {
         if configuration.allowMultipleSelection {
-            guard let selectedDates else { return }
+            guard let selectedDates else {
+                cancelDateRangeSelectionCallback?()
+                return 
+            }
             multiDateSelectionCallback(selectedDates)
         } else if configuration.allowRangeSelection {
-            guard let startDate, let endDate else { return }
+            guard let startDate, let endDate else {
+               cancelDateRangeSelectionCallback?()
+               return 
+            }
             dateRangeSelectionCallback(DateRange(startDate, endDate))
         } else {
-            guard let selectedDate else { return }
+            guard let selectedDate else {
+                cancelDateRangeSelectionCallback?()
+                return 
+            }
             dateSelectionCallback(selectedDate)
         }
     }
