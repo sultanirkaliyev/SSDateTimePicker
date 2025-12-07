@@ -143,11 +143,25 @@ final class SSDatePickerManager: ObservableObject, DatePickerConfigurationDirect
     
     /// Updates the range selection based on the chosen date.
     func updateRangeSelection(date: Date) {
-        if let startDate = startDate , date >= configuration.calendar.startOfDay(for: startDate) {
-            endDate = date
-        } else {
+        let date = configuration.calendar.startOfDay(for: date)
+        
+        if startDate == nil {
             startDate = date
+            endDate = nil
+            return
         }
+        
+        if let start = startDate, endDate == nil {
+            if date >= start {
+                endDate = date
+            } else {
+                startDate = date
+            }
+            return
+        }
+        
+        startDate = date
+        endDate = nil
     }
     
     /// Updates the month selection based on the chosen month.
