@@ -51,5 +51,11 @@ extension SSDateRangePicker {
         picker.datePicker.datePickerManager.endDate = dateRange?.endDate
         return picker
     }
+
+    public func onCancelDateSelection(_ completion: @escaping () -> ()) -> SSDateRangePicker {
+        let picker = self
+        picker.datePicker.datePickerManager.cancelDateRangeSelectionCallback = completion
+        return picker
+    }
 }
 
